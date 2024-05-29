@@ -1,0 +1,96 @@
+{Una empresa desarrolladora de juegos para teléfonos celulares con Android dispone de información de
+todos los dispositivos que poseen sus juegos instalados. De cada dispositivo se conoce la versión de
+Android instalada, el tamaño de la pantalla (en pulgadas) y la cantidad de memoria RAM que posee
+(medida en GB). La información disponible se encuentra ordenada por versión de Android. Realizar un
+programa que procese la información disponible de todos los dispositivos e informe:
+a. La cantidad de dispositivos para cada versión de Android.
+b. La cantidad de dispositivos con más de 3 GB de memoria y pantallas de a lo sumo a 5 pulgadas.
+c. El tamaño promedio de las pantallas de todos los dispositivos}
+
+program ejercicio12;
+const
+
+type
+dispositivo = record
+    versA: real;
+    tamp: real;
+    ram: integer;
+end;
+
+lista = ^nodo; 
+
+nodo = record
+    dato: dispositivo;
+    sig: lista;
+end;
+
+vercant = record
+    cant: integer;
+    version: real;
+end; 
+
+versionand = ^nodo;
+
+nodo = record
+    dato: vercant;
+    sig: versionand;
+end;
+
+procedure leerd (var d:dispositivo);
+begin
+readln(d.versA);
+readln(d.tamp);
+readln(d.ram);
+
+procedure insertarordenado (var l:lista; d:dispositivo) //inserto ordenada (se dispone);
+
+procedure cargarL (var l:lista); // cargo la lista (Se dispone);
+
+procedure puntoa (ver: real; var d:vercant);
+var
+aux: real;
+begin
+        d^.dato.cant:= 0; 
+        aux:= l^.dato.versA
+        while (aux = l^.dato.versA) do begin
+            d^.dato.cant := d^.dato.cant + 1;
+            l:= l^.sig;
+        d^.dato.version:= l^.dato.versA;
+        writeln('la cantidad de dispositivos para la version de android:', d^.dato.version,'es de:',
+        d^.dato.cant);
+        d:= d^.sig;
+        aux:=l^.dato.versA
+    end;
+    
+procedure puntob (gb: integer; panta: real; var cantcumple: integer);
+begin
+cantcumple:= 0;
+if (gb> 3) and (panta <= 5) then 
+    cantcumple:= cantcumple+1;
+end;
+
+function prom (sumapant: real; totaleidos: integer): real;
+begin
+ prom:= sumapant/ttotaleidos;
+end;
+            
+procedure recorrerL (l: lista; )
+var
+
+begin
+    totaleidos:=0; sumapant:=0;
+    while (l<> nil) do begin 
+        sumapant:= sumapant+ l^.dato.tamp;
+        totaleidos:= totaleidos + 1;
+        puntoa(l^.dato.versA,d);
+        puntob(l^.dato.ram, l^.dato.tamp,cantcumple);
+        l:=l^.sig;
+    end;
+    writeln('la cantidad que cumplen con el punto b es:', cantcumple);
+    writeln('el promedio de tamaños de pantalla es de:', prom (sumapant,totaleidos);
+end;
+
+var
+l:lista;
+begin
+l:=nil; 
