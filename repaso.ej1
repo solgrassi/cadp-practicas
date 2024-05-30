@@ -1,0 +1,165 @@
+{Una productora nacional realiza un casting de personas para la selección de actores extras de una nueva
+película, para ello se debe leer y almacenar la información de las personas que desean participar de dicho
+casting. De cada persona se lee: DNI, apellido y nombre, edad y el código de género de actuación que
+prefiere (1: drama, 2: romántico, 3: acción, 4: suspenso, 5: terror). La lectura finaliza cuando llega una
+persona con DNI 33555444, la cual debe procesarse.
+Una vez finalizada la lectura de todas las personas, se pide:
+a. Informar la cantidad de personas cuyo DNI contiene más dígitos pares que impares.
+b. Informar los dos códigos de género más elegidos.
+c. Realizar un módulo que reciba un DNI, lo busque y lo elimine de la estructura. El DNI puede no existir.
+Invocar dicho módulo en el programa principal.}
+
+program repaso1;
+const
+tam= 5;
+
+type
+persona = record
+    dni: integer;
+    apeynom: string;
+    edad: integer;
+    cod: 1..5;
+end;
+
+lista= ^nodo;
+
+nodo=record
+    dato: persona;
+    sig: lista;
+end;
+
+contador = array [1..tam] of integer;
+
+
+procedure leerP (var p: persona);
+begin
+    writeln('ingrese el dni del participante');
+    readln(p.dni);
+    writeln('ingrese el apellido y nombre');
+    readln(p.apeynom);
+    writeln('ingrese la edad del mismo');
+    readln(p.edad);
+    writeln('ingrese el tipo de genero que prefiere');
+    readln(p.cod);
+end;
+
+procedure agregarA (var l:lista; p: persona);
+var
+nuevo:lista;
+begin
+    new(nuevo);
+    nuevo^.dato:= p;
+    nuevo^.sig:= nil;
+    if (l= nil) then
+        L:= nuevo 
+    else begin
+        nuevo^.sig:=L;
+        L:= nuevo;  
+    end; 
+end;
+
+procedure cargarL(var l: lista);
+var
+    p: persona;
+begin
+    repeat
+        leerP(p);
+        agregarA(l, p);
+    until (p.dni = 33555444);
+end;
+
+function Maspar (dnii: integer): boolean;
+var
+aux: integer; par:integer; impar: integer; 
+begin
+    par:=0; impar:=0; 
+    while (dnii <> 0) do begin
+        aux:= dnii MOD 10;
+        if (aux MOD 2 = 0) then
+            par:= par + 1
+        else
+            impar:= impar + 1;
+        dnii:= dnii DIV 10;
+    end;
+    Maspar:= (par>impar);
+end;
+
+procedure iniciarV (var c:contador);
+var
+i:integer;
+begin
+    for i:= 1 to tam do
+        c[i]:= 0;
+end; 
+
+procedure cargarV (var c:contador; gen: integer);
+begin
+    c[gen]:= c[gen] + 1;
+end;
+
+procedure Maximos (c:contador; max1, max2: integer );
+var
+aux1,aux2,i: integer;
+begin
+    aux1:= -1; 
+    for i:= 1 to tam do begin
+        if (c[i] > aux1) then begin
+            aux2:= aux1;
+            max2:= max1;
+            aux1:= c[i]; 
+            max1:= i;
+        end
+        else begin
+            if (c[i] > aux2) then begin
+                aux2:= c[i];
+                max2:= i;
+            end;
+        end;
+    end;
+end;
+
+procedure recorrerL (l:lista; var cantpar: integer; var max1,max2: integer);
+var
+c:contador;
+begin 
+    cantpar:=0;
+    while (l<> nil) do begin 
+        if (Maspar(l^.dato.dni)) then
+            cantpar:= cantpar+1;
+        cargarV(c,l^.dato.cod);
+    end;
+    Maximos(c, max1,max2);
+end;
+
+procedure eliminardni (var l: lista; ddni: integer);
+var
+ant,act: lista; 
+begin
+    act:=l;
+    while (act <> nil) and (act^.dato.dni<> ddni) do begin
+        ant:=act;
+        act:=act^.sig;
+    end;
+    
+    if (act<>nil) then begin
+        if (act = l) then 
+            l:= l^.sig
+        else begin
+           ant^.sig:= act^.sig;
+           dispose (act);
+        end;
+    end;
+end; 
+
+var
+l:lista; c:contador; cantpar: integer; max1, max2: integer; ddni: integer;
+begin
+    l:=nil;
+    cargarL(l);
+    iniciarV(c);
+    recorrerL(l,cantpar, max1, max2);
+    readln(ddni);
+    eliminardni(l,ddni);
+    writeln('la cantidad de personas cyo dni tiene mas digitos pares que impares es', cantpar);
+    writeln('el codigo del genero mas elegido es', max1, 'y el codigo del segundo mas elegido es', max2);
+end.
