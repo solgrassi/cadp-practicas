@@ -92,10 +92,6 @@ begin
         c[i]:= 0;
 end; 
 
-procedure cargarV (var c:contador; gen: integer);
-begin
-    c[gen]:= c[gen] + 1;
-end;
 
 procedure Maximos (c:contador; var max1, max2: integer );
 var
@@ -118,15 +114,13 @@ begin
     end;
 end;
 
-procedure recorrerL (l:lista; var cantpar: integer; var max1,max2: integer);
-var
-c:contador;
+procedure recorrerL (l:lista; var cantpar: integer; var max1,max2: integer; var c:contador);
 begin 
     cantpar:=0;
     while (l<> nil) do begin 
         if (Maspar(l^.dato.dni)) then
             cantpar:= cantpar+1;
-        cargarV(c,l^.dato.cod);
+         c[l^.dato.cod]:= c[l^.dato.cod] + 1;
         l:= l^.sig;
     end;
     Maximos(c, max1,max2);
@@ -158,12 +152,9 @@ begin
     l:=nil;
     cargarL(l);
     iniciarV(c);
-    recorrerL(l,cantpar, max1, max2);
+    recorrerL(l,cantpar, max1, max2, c);
     readln(ddni);
     eliminardni(l,ddni);
     writeln('la cantidad de personas cyo dni tiene mas digitos pares que impares es', cantpar);
     writeln('el codigo del genero mas elegido es', max1, 'y el codigo del segundo mas elegido es', max2);
 end.
-    
-    
-        
