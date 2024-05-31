@@ -97,7 +97,7 @@ begin
     c[gen]:= c[gen] + 1;
 end;
 
-procedure Maximos (c:contador; max1, max2: integer );
+procedure Maximos (c:contador; var max1, max2: integer );
 var
 aux1,aux2,i: integer;
 begin
@@ -127,6 +127,7 @@ begin
         if (Maspar(l^.dato.dni)) then
             cantpar:= cantpar+1;
         cargarV(c,l^.dato.cod);
+        l:= l^.sig;
     end;
     Maximos(c, max1,max2);
 end;
@@ -163,3 +164,6 @@ begin
     writeln('la cantidad de personas cyo dni tiene mas digitos pares que impares es', cantpar);
     writeln('el codigo del genero mas elegido es', max1, 'y el codigo del segundo mas elegido es', max2);
 end.
+    
+    
+        
