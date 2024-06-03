@@ -1,0 +1,154 @@
+{Una empresa de transporte de cargas dispone de la información de su flota compuesta por 100 
+camiones. De cada camión se tiene: patente, año de fabricación y capacidad (peso máximo en 
+toneladas que puede transportar).
+Realizar un programa que lea y almacene la información de los viajes realizados por la empresa. De 
+cada viaje se lee: código de viaje, código del camión que lo realizó (1..100), distancia en kilómetros 
+recorrida, ciudad de destino, año en que se realizó el viaje y DNI del chofer. La lectura finaliza cuando 
+se lee el código de viaje -1.
+Una vez leída y almacenada la información, se pide:
+1. Informar la patente del camión que más kilómetros recorridos posee y la patente del camión que 
+menos kilómetros recorridos posee.
+2. Informar la cantidad de viajes que se han realizado en camiones con capacidad mayor a 30,5 
+toneladas y que posean una antigüedad mayor a 5 años al momento de realizar el viaje (año en 
+que se realizó el viaje).
+3. Informar los códigos de los viajes realizados por choferes cuyo DNI tenga sólo dígitos impares.
+Nota: Los códigos de viaje no se repiten}
+
+program ejercicio5;
+const
+tam= 100;
+type
+    cam= 1..100;
+    camion= record
+        pat: string;
+        añofa: integer;
+        capton:real;
+    end;
+    
+    camiones = array [1..tam] of camion;
+    contador = array [1..tam] of real; 
+    
+    viaje = record
+        codv:integer;
+        codcam:cam;
+        dist: real;
+        dest: string;
+        año: integer;
+        dnicho: integer;
+    end;
+    
+    lista= ^nodo;
+    
+    nodo = record
+        dato: viaje;
+        sig: lista;
+    end;
+    
+procedure leerV (var v:viaje);
+begin
+    readln(v.codv);
+    readln(v.codcam);
+    readln(v.dist);
+    readln(v.dest);
+    readln(v.año);
+    readln(v.dnicho);
+end;
+
+procedure agregarA (var l:lista; v:viaje);
+var
+nue:lista;
+begin
+    new(nue); 
+    nue^.dato:= viaje;
+    nue^.sig:= l;
+    l:= nue;
+end;
+
+procedure cargarL (var l:lista);
+var
+v:viaje;
+begin
+    leerV(v);
+    while (v.codv <> -1) do begin
+        agregarA(l,v);
+        leerV(v);
+    end;
+end;
+
+procedure InicializarV (var c: contador);
+var 
+i: integer;
+begin
+    for i:= 1 to tam do 
+        c[i]:=0;
+end;
+
+function cumple (cap: real; añov,fabri: integer):boolean;
+begin
+    if (cap > 30.5) and ((añov - fabri) > 5) then
+        cumple:=true;
+    else 
+        cumple:=false;
+end;
+
+function impares (dni: integer): boolean;
+var
+aux: integer; flag:boolean;
+begin 
+    flag:= true;
+    pares:= 0;
+    while (dni <> 0) and (flag) do begin
+        aux:= dni mod 10;
+        if (aux mod 2= 0) then
+        flag:= false;
+        dni:= dni div 10;
+    end;
+    impares:= flag;
+end; 
+
+procedure procesarl (l:lista, var c:contador, ca: camiones);
+var
+cantviajes:=integer;
+begin
+    cantviajes:=0;
+    while (l<> nil) do begin
+        c[l^.dato.codcam]:= c[l^.dato.codcam] + l^.dato.dist;
+        if (cumple(ca[l^.dato.codcam].capton,l^.dato.año, ca[l^.dato.codcam].añofa)) then
+            cantviajes:= cantviajes+1;
+        if (impares (l^.dato.dnicho)) then 
+            writeln('el codigo del viaje realizado por el chofer con dni impar es:', l^.dato.codv);
+    end;
+    writeln('la cantidad total de viajes que se han realizado en camiones con capacidad mayor a 30,5 
+toneladas y que posean una antigüedad mayor a 5 años es de:', cantviajes);
+
+end;
+
+
+procedure maxymin (c: contador, var maximo,minimo: string; ca:camiones);
+var
+min,max: integer;
+begin
+    min:= 9999; max:= -1;
+    for i:= 1 to tam do begin
+        if (c[i]> max) then begin
+            max:= c[i];
+            maximo:= ca[i].pat;
+        end;
+        if (c[i]< min) then begin 
+            min:= c[i];
+            minimo:= ca[i].pat;
+        end;
+    end;
+end;
+
+var
+l:lista; ca:camiones;c:contador; maximo,minimo: string; 
+begin
+    l:=nil;
+    cargarV(ca)// se dispone;
+    cargarL(l);
+    InicializarV(c);
+    procesarl(l,c,ca);
+    maxymin(c,maximo,minimo,ca);
+    writeln('la patente del camion que mas km recorrio es:', maximo, 'y la del que menos recorrio es:', minimo);
+end. 
