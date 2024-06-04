@@ -1,0 +1,158 @@
+{El Observatorio Astronómico de La Plata ha realizado un relevamiento sobre los distintos objetos 
+astronómicos observados durante el año 2015. Los objetos se clasifican en 7 categorías: 1: estrellas, 
+2: planetas, 3: satélites, 4: galaxias, 5: asteroides, 6: cometas y 7: nebulosas.
+Al observar un objeto, se registran los siguientes datos: código del objeto, categoría del objeto (1..7), 
+nombre del objeto, distancia a la Tierra (medida en años luz), nombre del descubridor y año de su 
+descubrimiento. 
+A. Desarrolle un programa que lea y almacene la información de los objetos que han sido 
+observados. Dicha información se lee hasta encontrar un objeto con código -1 (el cual no debe 
+procesarse). La estructura generada debe mantener el orden en que fueron leídos los datos.
+B. Una vez leídos y almacenados todos los datos, se pide realizar un reporte con la siguiente
+información:
+1. Los códigos de los dos objetos más lejanos de la tierra que se hayan observado.
+2. La cantidad de planetas descubiertos por "Galileo Galilei" antes del año 1600.
+3. La cantidad de objetos observados por cada categoría.
+4. Los nombres de las estrellas cuyos códigos de objeto poseen más dígitos pares que 
+impares.}
+
+program ejercicio6;
+const
+tam = 7;
+type 
+catego= 1..7;
+objeto =record
+    cod: integer;
+    cat: catego;
+    nom: string;
+    dist: real;
+    descu: string;
+    anod: integer;
+end;
+lista = ^nodo;
+nodo = record
+    dato: objeto;
+    sig: lista;
+end;
+
+contador = array [1..tam] of integer;
+
+procedure leero (var o:objeto);
+begin
+    readln(o.cod);
+    readln(o.cat);
+    readln(o.nom);
+    readln(o.dist);
+    readln(o.descu);
+    readln(o.anod);
+end;
+
+procedure agregarAtras ( var l, ult:lista; o: objeto);
+var
+nue: lista;
+begin
+    new(nue);
+    nue^.dato:= o;
+    nue^.sig:= nil;
+    if (l= nil) then
+        l:= nue
+    else
+        ult^.sig:= nue;
+    ult:= nue;
+end; 
+
+procedure cargarL (var l:lista);
+var
+o: objeto; ult: lista;
+begin
+    leero(o);
+    while (o.cod <> -1) do begin 
+        agregarAtras(l,ult,o);
+        leero(o);
+    end;
+end;
+
+procedure inicializa (var c:contador);
+var
+i: integer;
+begin
+    for i:= 1 to tam do
+        c[i]:=0;
+end;
+
+
+procedure maximos (lejania: real; codi: integer; var max,max2: integer);
+var
+aux,aux2: real;
+begin
+    aux:= -1;
+    if (lejania > aux) then begin
+        aux2:= aux;
+        max2:= max;
+        aux:= lejania;
+        max:= codi;
+    end
+    else begin
+        if (lejania > aux2) then begin
+            aux2:= lejania;
+            max2:= codi;
+        end;
+    end;
+end; 
+
+function maspar (codigo: integer): boolean;
+var
+aux: integer; par: integer; impar: integer;
+begin 
+    par:= 0; impar:= 0; 
+    while (codigo <> 0) do begin
+        aux:= codigo MOD 10;
+        if (aux MOD 2= 0) then
+            par:= par + 1
+        else
+            impar:= impar+ 1;
+        codigo:= codigo DIV 10;
+    end;
+    maspar:= (par>impar);
+end; 
+    
+function cumple (nom:string; ano:integer): boolean;
+begin
+    if (nom = 'Galileo Galilei') and (ano < 1600) then
+        cumple:= true
+    else 
+        cumple:= false;
+end; 
+
+procedure imprimirv (c:contador);
+var
+i:integer;
+begin
+    for i:= 1 to tam do
+        writeln('la categoria tipo', i, 'cuenta con un total de', c[i], 'objetos');
+end;
+
+procedure procesarL (l :lista; var c:contador);
+var
+max,max2: integer; cant: integer;
+begin
+    cant:=0;
+    while (l<> nil) do begin
+        c[l^.dato.cat]:= c[l^.dato.cat] + 1;
+        maximos(l^.dato.dist,l^.dato.cod, max,max2);
+        if (cumple(l^.dato.descu, l^.dato.anod)) then
+            cant:= cant + 1;
+        if (maspar(l^.dato.cod)) then
+            writeln(' el nombre de la estrella es ', l^.dato.nom);
+    writeln('el codigo del objeto mas lejano es:', max, 'y el del segundo es:', max2);
+    imprimirv (c);
+end;
+end;
+
+var
+l:lista; c:contador;
+begin
+    l:=nil;
+    cargarL(l);
+    inicializa(c);
+    procesarL(l,c); 
+end.
