@@ -1,0 +1,142 @@
+{Una entidad bancaria de la ciudad de La Plata solicita realizar un programa destinado a la administración de
+transferencias de dinero entre cuentas bancarias, efectuadas entre los meses de Enero y Noviembre del año
+2018.
+El banco dispone de una lista de transferencias realizadas entre Enero y Noviembre del 2018. De cada
+transferencia se conoce: número de cuenta origen, DNI de titular de cuenta origen, número de cuenta
+destino, DNI de titular de cuenta destino, fecha, hora, monto y el código del motivo de la transferencia (1:
+alquiler, 2: expensas, 3: facturas, 4: préstamo, 5: seguro, 6: honorarios y 7: varios). Esta estructura no posee
+orden alguno.
+Se pide:
+a) Generar una nueva estructura que contenga sólo las transferencias a terceros (son aquellas en las que
+las cuentas origen y destino no pertenecen al mismo titular). Esta nueva estructura debe estar
+ordenada por número de cuenta origen.
+Una vez generada la estructura del inciso a), utilizar dicha estructura para:
+b) Calcular e informar para cada cuenta de origen el monto total transferido a terceros.
+c) Calcular e informar cuál es el código de motivo que más transferencias a terceros tuvo.
+d) Calcular e informar la cantidad de transferencias a terceros realizadas en el mes de Junio en las cuales
+el número de cuenta destino posea menos dígitos pares que impares.}
+
+program ejercicio8;
+const
+tam= 7; 
+type
+    fechas= record
+        dia:1..31;
+        mes:1..11;
+        end;
+        
+    codigo= 1..7; 
+    
+    transfe = record
+        numCuentaO: integer;
+        dniori:integer;
+        numCuentaD:integer;
+        dnidest:integer;
+        fecha: fechas;
+        hora:real;
+        monto:real;
+        codmot:codigo;
+    end;
+    
+    lista=^nodo;
+    nodo=record
+        dato:transfe;
+        sig:lista;
+    end;
+    
+    contador = array [1 to Tam] of integer; 
+    
+    
+procedure insertaro (var lnue: lista; t:transfe);
+var
+ant,act,nue: lista;
+begin
+new(nue); nue^.dato:= t;
+act:= lnue; ant:= lnue;
+while (act<> nil) and (t.numCuentaO>act^.dato.numCuentaO) do begin
+    ant:=act;
+    act:=act^.sig;
+if (act = nil) then
+    l:=nue;
+else
+    ant^.sig:= nue;
+nue^.sig:=act;
+end; 
+end;
+
+procedure generarl (var lnue:lista);
+var
+l:lista; 
+begin
+    while (l<> nil) do begin 
+        if (l^.dato.dniori <> l^.dato.dnidest) then
+            insertaro(lnue, l^.dato); 
+    end; 
+end; 
+
+function masimp (ncuenta: integer): boolean;
+var
+aux,par,impar: integer;
+begin
+    par:=0; impar:= 0;
+    while (ncuenta <> 0) do begin
+        aux:= ncuenta MOD 10;
+        if (aux MOD 2= 0) then 
+            par:= par + 1;
+        else
+            impar:= impar + 1;
+        ncuenta:= ncuenta DIV 10;
+    end; 
+    masimp:= (impar>par);
+end;
+
+procedure inicializarV ( var c:contador);
+var
+i:integer;
+begin
+    for i:= 1 to tam do 
+        c[i]:=0;
+end; 
+function max (c:contador): integer;
+var
+max1,i,aux: integer;
+begin
+    max1:= -1;
+    for i:= 1 to tam do begin
+        if (c[i] > max1) then
+            max1:=c[i];
+            aux:= i;
+    end;
+    max:= aux; 
+    
+procedure procesarL (lnue: lista; var c:contador)
+var
+montot,canttransf,aux: integer;
+begin
+    canttransf:= 0;
+    while (lnue<> nil) do begin
+       montot:=0;
+       aux:= llnue^.dato.numCuentaO;
+       while (l^.dato.numCuentaO = aux) do begin
+            montot:=montot + lnue^.dato.monto;
+            c[lnue^.dato.codmot]:= c[lnue^.dato.codmot]+1;
+            if (lnue^.dato.fecha.mes = 6) then 
+               if (masimp) then
+                canttransf:= canttransf + 1;
+            lnue:= lnue^.dato.sig; 
+        end;
+        writeln('la cuenta de origen numero', aux, 'ha trasferido un total de', montot, 'a terceros');
+    writeln('el código de motivo que más transferencias a terceros tuvo es:', max(c));
+    writeln('la cantidad de cuentas que cumplen con las condiciones es de:', canttransf); 
+end; 
+
+var
+l, lnue:lista; c:contador;
+begin
+    l:= nil; 
+    cargarL (l); // se dispone//
+    inicializarV(c);
+    lnue:= nil;
+    generarl(lnue);
+    procesarL(lnue,c);
+end.
