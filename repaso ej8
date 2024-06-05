@@ -56,7 +56,7 @@ act:= lnue; ant:= lnue;
 while (act<> nil) and (t.numCuentaO>act^.dato.numCuentaO) do begin
     ant:=act;
     act:=act^.sig;
-if (act = nil) then
+if (act = ant) then
     l:=nue;
 else
     ant^.sig:= nue;
