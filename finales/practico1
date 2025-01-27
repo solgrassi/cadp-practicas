@@ -1,0 +1,145 @@
+{Una empresa dispone de una estructura de datos con las ventas de su comercio. De cada venta se conoce número 
+de venta, cantidad de productos y tipo de pago (efectivo o tarjeta). Se pide implementar un programa que genere
+una segunda estructura con las ventas cuya cantidad de productos tenga más dígitos pares o impares. En la 
+estructura generada deben quedar almacenadas las ventas de tipo de pago efectivo antes que las de tipo de pago 
+con tarjeta.}
+
+program Hello;
+type
+
+// se dispone
+venta = record
+    num:integer;
+    cprodu: integer;
+    pago: string;
+end;
+
+ventas = ^nodo;
+
+nodo = record
+    dato: venta;
+    sig: ventas;
+end;
+
+
+// nueva estructura
+lista = ^nuevo;
+
+nuevo = record
+    dato: venta;
+    sig:lista;
+end;
+
+procedure leerVenta (var v:venta);
+begin
+    write ('num');
+    readln(v.num);
+    write ('cant');
+    readln(v.cprodu);
+    write ('metodo');
+    readln(v.pago);
+end;
+
+procedure agregarAdelante (var l:ventas; v:venta);
+var
+nue:ventas;
+begin
+    new(nue);
+    nue^.dato:= v;
+    nue^.sig:= l;
+    l:= nue;
+end;
+
+procedure cargarVentas (var ven:ventas); //se dispone
+var
+v:venta; i:integer;
+begin
+    for i:= 1 to 10 do begin
+      leerVenta (v);
+      agregarAdelante(ven, v);
+     end;
+end;
+
+    
+
+function digitos (cant: integer): boolean;
+var
+aux, par, impar: integer;
+begin
+    par:=0;
+    impar:=0;
+    while (cant<> 0) do begin
+        aux:= cant MOD 10;
+        if (aux MOD 2 = 0) then 
+            par:= par + 1
+        else
+            impar:= impar + 1;
+        cant:= cant DIV 10;
+    digitos:= (par> impar)
+end;
+end;
+
+procedure agregarAd (var l,ult:lista; v:venta);
+var
+nue:lista;
+begin
+    new(nue);
+    nue^.dato:= v;
+    nue^.sig:= l;
+    l:= nue;
+    if (ult = nil) then 
+        ult:=nue;
+end;
+
+procedure agregarAtras (var l, ult:lista; v:venta);
+var
+nue: lista;
+begin
+    new(nue);
+    nue^.dato:= v;
+    nue^.sig:= nil;
+    if (l= nil) then
+        l:= nue
+    else
+        ult^.sig:= nue;
+    ult:= nue;
+end;
+
+procedure cargarL (var l :lista; ven: ventas);
+var
+ult:lista;
+begin
+    ult:=nil;
+    while (ven <> nil) do begin
+        if (digitos (ven^.dato.cprodu)) then begin
+            if (ven^.dato.pago = 'efectivo') then
+                agregarAd(l, ult,ven^.dato)
+            else
+                agregarAtras(l, ult, ven^.dato);
+        end;
+        ven:= ven^.sig;
+    end;
+end;
+
+procedure imprimir (l: lista);
+begin
+    while (l<> nil) do begin
+        writeln (l^.dato.num);
+        writeln (l^.dato.pago);
+        writeln('----------');
+        l:= l^.sig;
+    end;
+end;
+
+
+var
+l:lista; ven:ventas;
+begin
+l:= nil;
+ven:=nil;
+cargarVentas(ven);
+cargarL (l, ven);
+imprimir (l);
+end.
+                
+                
