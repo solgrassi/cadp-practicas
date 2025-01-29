@@ -1,0 +1,94 @@
+{Se lee información de las ventas de productos de un comercio. De cada venta se conoce: 
+código de venta, código de producto y cantidad vendida. La lectura finaliza cuando se
+ingresa el código de venta 9999. 
+Se pide implementar un programa que genere una lista ordenada por código de producto.
+Una vez generada la lista, se debe informar la cantidad total de productos vendidos,
+para un código de producto que se ingresa por teclado.}
+
+
+program hola;
+type
+
+venta = record
+    codigoV: integer;
+    codigoP: integer;
+    cant: integer;
+end;
+
+lista =^nodo;
+
+nodo = record
+    dato: venta;
+    sig: lista;
+end;
+
+
+procedure leerV (var v:venta);
+begin
+    writeln('codigo de venta');
+    read(v.codigoV);
+    if (v.codigoV <> 9999) then begin
+        writeln( 'codigo producto');
+        readln(v.codigoP);
+        writeln('cantidad vendida');
+        readln(v.cant);
+    end;
+end;
+
+procedure insertarOrdenado (var l:lista; v:venta);
+var
+nue,ant,act:lista;
+begin
+    new(nue);
+    nue^.dato:=v;
+    act:= l;
+    ant:=l;
+    while (act<> nil) and (v.codigoP > act^.dato.codigoP) do begin
+        ant:= act;
+        act:= act^.sig;
+    end;
+    if (act=ant) then
+        l:=nue
+    else
+        ant^.sig:= nue;
+    nue^.sig:= act;
+end;
+
+
+procedure cargarLista (var l :lista);
+var
+v:venta;
+begin
+    leerV(v);
+    while (v.codigoV <> 9999) do begin
+        insertarOrdenado (l,v);
+        leerV(v);
+    end;
+    writeln('finalizo la carga');
+end;
+
+function recorrerL (l:lista; cod: integer): integer;
+var
+    contador:integer;
+begin
+    contador:=0;
+    while (l<> nil) and (cod>= l^.dato.codigoP) do begin
+        if (cod = l^.dato.codigoP) then
+            contador:= contador + l^.dato.cant;
+        l:= l^.sig;
+    end;
+    recorrerL:=contador;
+end;
+
+var
+l:lista; cod:integer;
+begin
+l:=nil;
+cargarLista(l);
+writeln('ingrese un codigo de producto');
+readln(cod);
+writeln ('la cantidad total vendida para el producto ', cod, ' es de:',recorrerL(l,cod));
+end.
+    
+
+        
