@@ -1,0 +1,74 @@
+{Se dispone de un vector de caracteres ordenados alfabéticamente (de a lo sumo 100 elementos) que puede 
+aparecer repetidos. Se pide generar un vector que contenga la cantidad total de repeticiones de cada uno 
+de los caracteres alfabéticos. Luego se debe imprimir el vector resultante.}
+
+program practica3;
+type
+
+caracteres = array [1..100] of char;//se dispone
+
+car = record
+  nombre: char;
+  cant: integer;
+end;
+
+repes = array [1..100] of car;
+
+procedure cargarV (var v:caracteres; var dl:integer); //se dispone;
+var
+aux:char;
+begin
+    dl:= 0;
+    readln(aux);
+    while (aux <> 'Z') and (dl<100) do begin
+        dl:= dl +1;
+        v[dl]:=aux;
+        readln(aux);
+    end;
+end;
+
+procedure inicializarV (var r:repes; dl:integer);
+var
+i:integer;
+begin
+    for i:=1 to dl do 
+        r[i].cant:=0;
+end;
+
+
+procedure recorrerV (v:caracteres; var r:  repes; dl: integer; var dimR: integer);
+var
+aux: char; i,x:integer;
+begin
+    i:=1;
+    x:=1;
+    while (i<=dl) do begin
+        aux:= v[i];
+        r[x].nombre:= aux;
+        while (aux=v[i]) do begin
+            r[x].cant:= r[x].cant + 1;
+            i:= i +1;
+        end;
+        x:= x +1;
+    end;
+    dimR:= x-1;
+end;
+
+procedure imprimirV (r:repes; dimR:integer);
+var 
+i:integer;
+begin
+    for i:= 1 to dimR do begin
+        writeln ('caracter:', r[i].nombre);
+        writeln( 'cantidad: ', r[i]. cant);
+    end;
+end;
+
+var
+r:repes; v:caracteres; dl, dimR:integer;
+begin
+    cargarV(v,dl);//se dispone
+    recorrerV(v,r,dl,dimR);
+    imprimirV(r,dimR);
+end.
+    
