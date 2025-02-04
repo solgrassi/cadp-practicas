@@ -1,0 +1,81 @@
+{Se dispone de la información de los participantes inscriptos a una carrera (a lo sumo 5000).
+De cada participante se tiene DNI, nombre y apellido, categoría (1..5) y fecha de inscripción.
+Se pide implementar un programa que guarde en una estructura adecuada los participantes de aquellas 
+categorías que posean a lo sumo 50 inscriptos. Se sabe que cada participante se puede anotar en una 
+sola categoría.
+19.51- 20.08}
+
+
+program Hello;
+type
+categoria = 1..5;
+
+participante = record
+    dni:integer;
+    nomyape:string;
+    cate: categoria;
+    inscripcion: string;
+end;
+
+participantes = array [1..5000] of participante;
+
+// se dispone
+
+lista = ^nodo:
+
+nodo = record
+    dato:participante;
+    sig: lista;
+end;
+
+contador := array [1..5] of integer;
+
+procedure cargarV (var v:participantes; var dl: integer); //se dispone
+
+procedure inicializarC (var c:contador);
+var
+i:integer;
+begin
+    for i:=1 to 5 do
+        c[i]:=0;
+end;
+
+procedure procesarV (v:participantes; dl: integer; var c:contador);
+var 
+i:integer;
+begin
+    for i:= 1 to dl do
+        c[v[i].cate]:= c[v[i].cate] + 1;
+end; 
+
+procedure agregarAd (var l:lista; p:participante);
+var
+nue: lista;
+begin
+    new(nue);
+    nue^.dato:= p;
+    nue^.sig:= l;
+    l:= nue;
+end;
+
+
+procedure cargarL (var l:lista; v:participantes; dl:integer; c:contador);
+var
+i:integer;
+begin
+    for i:= 1 to dl do begin
+        if (c[v[i].cate) <=  50) then
+            agregarAd(l, v[i]);
+    end;
+end;
+
+var
+l:lista; c:contador; v: participantes; dl:integer;
+begin
+    l:=nil;
+    cargarV (v,dl); //se dispone
+    inicializarC(c);
+    procesarV(v);
+    cargarL(l,v,dl,c);
+end.
+    
