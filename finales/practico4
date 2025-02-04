@@ -1,0 +1,94 @@
+{La Facultad de Informática organizará el congreso WICC 2022, en donde se expondrán trabajos 
+de investigación. De cada trabajo se conoce: título, nombre del autor, DNI del autor y tipo 
+de trabajo (1..10). Un mismo autor puede presentar varios trabajos. Se pide escribir un programa que: 
+a) Lea y almacene en una estructura adecuada la información de los trabajos. La lectura finaliza al ingresar
+un DNI con valor 22222222 (el cual debe procesarse). 
+b) Informar para cada autor la cantidad de trabajos presentados. }
+
+program Hello;
+type
+
+trabajos= 1..10;
+
+trabajo = record
+    titulo: string;
+    autor: string;
+    dni: integer;
+    tipoT: trabajos;
+end;
+
+lista = ^nodo;
+
+nodo = record
+    dato: trabajo;
+    sig: lista;
+end;
+
+
+procedure leerT (var t:trabajo);
+begin
+    writeln( 'dni');
+    readln(t.dni);
+    writeln ('titulo');
+    readln(t.titulo);
+    writeln('autor');
+    readln(t.autor);
+    writeln('trabajo tipo');
+    readln(t.tipoT);
+end;
+
+procedure insertarOrdenado (var l:lista; t:trabajo);
+var
+nue,act,ant: lista;
+begin
+    new(nue);
+    nue^.dato:= t;
+    act:= l;
+    ant:=l;
+    while (act<> nil) and (t.dni > act^.dato.dni) do begin
+        ant:=act;
+        act:=act^.sig;
+    end;
+    if (act=ant) then
+        l:= nue
+    else
+        ant^.sig:=nue;
+    nue^.sig:=act;
+end;
+
+
+procedure cargarL (var l: lista);
+var
+t:trabajo;
+begin
+    repeat 
+        leerT(t);
+        insertarOrdenado(l,t);
+    until (t.dni = 2222);
+end;
+
+
+procedure cantPorAutor (l :lista);
+var
+aux:integer; tot: integer;
+begin
+    while (l<> nil) do begin
+        tot:=0;
+        aux:= l^.dato.dni;
+        while (l<>nil) and (aux = l^.dato.dni) do begin
+            tot:= tot +1;
+            l:=l^.sig;
+        end;
+        writeln(' el autor con  dni: ', aux, ' tiene un total de: ', tot, ' trabajos');
+    end;
+end;
+
+var
+l:lista;
+begin
+    l:=nil;
+    cargarL(l);
+    cantPorAutor(l);
+end. 
+    
+
