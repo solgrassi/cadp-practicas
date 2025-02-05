@@ -1,0 +1,86 @@
+
+program hola;
+type 
+fila = array [1..20] of boolean;
+tablero = array [1..15] of fila;
+
+
+procedure inicalizarTablero (var t:tablero);
+var
+i,x:integer;
+begin
+    for x:= 1 to 15 do begin
+        for i:= 1 to 20 do
+             t[x][i]:= false;
+    end;
+end;
+
+procedure dameNumeroFila (var f:integer); //se dispone
+begin
+    writeln('ingrese num fila');
+    readln(f);
+end;
+
+procedure dameNumeroColumna (var c:integer); //se dispone
+begin
+    writeln('ingrese numero columna');
+    readln(c);
+end;
+
+function juego (var t: tablero; f:integer; c:integer): boolean;
+begin
+   if ( t[c][f]= true) then begin
+        t[c][f]:= false;
+        writeln ('verdadero');
+        juego:= true;
+    end
+    else begin
+        writeln ('falso');
+        juego:= false;
+    end;
+end;
+
+procedure colocarBarcos (var t :tablero);
+var
+i,f,c: integer;
+begin
+   for i:= 1 to 7 do begin
+        dameNumeroFila(f);
+        dameNumeroColumna(c);
+        t[c][f]:= true;
+    end;
+end;
+        
+procedure rondas (var t1,t2:tablero);
+var
+i,c,f,tot1,tot2: integer;
+begin
+    tot1:=0; tot2:=0;
+    writeln ('jugador 1 coloque sus barcos');
+    colocarBarcos (t1);
+    writeln('juegador 2 coloque sus barcos');
+    colocarBarcos(t2);
+    for i:= 1 to 10 do begin
+        writeln('jugador 1, donde ataca?');
+        dameNumeroColumna(c);
+        dameNumeroFila(f);
+        if (juego(t2,f,c)) then
+            tot1:= tot1 + 1;
+        writeln('jugador 2, donde ataca?');
+        dameNumeroColumna(c);
+        dameNumeroFila(f);
+        if (juego (t1,f,c)) then
+            tot2:= tot2 + 1;
+    end;
+    writeln('total jugador 1: ', tot1, ' puntos');
+    writeln('total jugador 2: ', tot2, ' puntos');
+end;
+
+var
+t1,t2: tablero;
+begin
+inicalizarTablero(t1);
+inicalizarTablero(t2);
+rondas(t1,t2);
+end.
+        
