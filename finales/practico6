@@ -1,0 +1,73 @@
+{Práctica: Realice un módulo que lee números enteros entre 0 y 100 y devuelva un vector 
+que contenga la cantidad de ocurrencias de los valores leídos. La lectura finaliza cuando 
+se lee el valor 0.
+Ejemplo: si se leen los valores: 1, 20, 55, 7, 1, 7, 0 entonces el vector resultante deberá 
+contener la información necesaria para saber que:
+valor 1 cantidad de ocurrencias 2
+valor 20 cantidad de ocurrencias 1
+valor 55 cantidad de ocurrencias 1
+valor 7 cantidad de ocurrencias 2
+20.17- 20.37
+}
+
+program Hello;
+type
+
+enteros= 0..100;
+numeros = record
+    numero: enteros;
+    repes: integer;
+end;
+
+leidos = array [1..100] of numeros ;
+
+procedure leerN (var n:numeros);
+begin
+    writeln('numero');
+    readln (n.numero);
+end;
+
+procedure agregarV (var l:leidos; n:numeros; var dl:integer);
+var
+pos:integer;
+begin
+    pos:= 1;
+    while (pos<= dl) and (n.numero <> l[pos].numero) do 
+        pos:= pos +1;
+    if (pos<= dl) and (n.numero = l[pos].numero) then
+        l[pos].repes :=  l[pos].repes + 1
+    else begin
+        dl:= dl +1;
+        l[dl].numero:= n.numero;
+        l[dl].repes:= 1;
+    end;
+end;
+
+        
+procedure leerNumeros (var l:leidos; var dl:integer);
+var 
+ n:numeros; 
+begin
+    dl:= 0;
+    leerN (n);
+    while (n.numero <> 0) do begin
+        agregarV (l,n,dl);
+        leerN(n);
+    end;
+end;
+
+procedure imprimirV (l: leidos; dl:integer);
+var
+i:integer;
+begin 
+    for i:= 1 to dl do
+        writeln('el numero: ', l[i].numero, ' se repitio: ', l[i].repes, ' veces.');
+end;
+
+var
+l:leidos; dl:integer;
+begin
+   leerNumeros (l,dl);
+   imprimirV(l,dl)
+end.
+ 
