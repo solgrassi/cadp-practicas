@@ -1,0 +1,74 @@
+{Una empresa dispone de la información de las asistencias de sus empleados durante un periodo de tiempo.
+De cada empleado conoce: DNI, apellido y nombre, código de departamento en el que trabaja (entre 1 y 100),
+fecha y si estuvo presente o no ese día (no todos los días se pasa asistencia y los empleados pueden haber 
+estado trabajando o haber faltado). Esta estructura se encuentra ordenada por código de departamento. 
+Se pide realizar un programa que informe el departamento con más empleados presentes durante el periodo
+evaluado por la empresa.
+
+15.23-15.53
+}
+
+program hola;
+type 
+departamento = 1..100; 
+
+empleado = record
+    dni:integer;
+    apeynom: string[100];
+    depa: departamento;
+    fecha: string[10]; 
+    asistio: boolean;
+end; 
+
+lista =^nodo;
+
+nodo = record
+    dato: empleado;
+    sig: lista;
+end;
+
+// se dispone
+
+contador = array [departamento] of integer; 
+
+procedure cargarL (var l:lista); //se dispone 
+
+procedure procesarEmpleados (l:lista; var c:contador );
+var
+aux: departamento; tot: integer;
+begin
+    while (l<> nil) do begin
+        tot:= 0;
+        aux:= l^.dato.depa;
+        while (l<> nil) and (aux = l^.dato.depa) do begin
+            if (l^.dato.asistio) then
+                tot := tot+ 1;
+            l:= l^.sig;
+        end;
+        c[aux]:= tot;
+    end;
+end;
+
+function calcularMaximo (c:contador): integer;
+var
+max,depamax,i:integer;
+begin
+    max:= -1;
+    for i:= 1 to 100 do begin
+        if (c[i] > max) then begin
+            max:= c[i];
+            depamax:= i;
+        end;
+    end;
+    calcularMaximo:= depamax;
+end;
+
+var
+l:lista; c:contador; 
+begin
+    l:=nil;
+    cargarL (l); //se dispone
+    procesarEmpleados(l,c);
+    writeln('el departamento con mayor numero de asistencias es el numero: ', calcularMaximo(c));
+end. 
+        
