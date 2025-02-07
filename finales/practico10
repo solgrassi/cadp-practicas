@@ -1,0 +1,80 @@
+{
+ Un comercio dispone de la información de sus ventas. De cada venta se conoce: código de
+ producto, DNI del cliente, fecha, cantidad y precio unitario. La información está ordenada por
+ DNI. Implementar un programa que genere una nueva estructura de datos que contenga DNI
+ del cliente, cantidad total de compras que realizó y el monto total en compras
+
+}
+program Hello;
+type
+venta = record
+    cod: integer;
+    dniC:integer:
+    fecha: string[10];
+    cant: integer;
+    precioU: real;
+end;
+
+ventas = ^nodo;
+
+nodo = record
+    dato:venta;
+    sig:ventas;
+end;
+
+//se dispone
+
+cliente = record 
+    dni:integer;
+    totCompra: integer;
+    montoTot: integer;
+end;
+
+lista =^nodo2;
+
+nodo2= record
+    dato: cliente;
+    sig:lista;
+end;
+
+procedure cargarListaVentas (var v:ventas); //se dispone
+
+
+procedure agregarA (var l:lista; c:cliente );
+var
+nue: lista;
+begin
+    new(nue);
+    nue^.dato:= c;
+    nue^.sig:= l;
+    l:= nue;
+end;
+
+procedure procesarEstructura (v:ventas; var l:lista);
+var
+totMonto: integer; totCompras: integer; c:cliente;
+begin
+    while (l<> nil) do begin
+        aux:= l^.dato.dni;
+        totCompras:=0;
+        totMonto:=0;
+        while (aux = l^.dato.dni) do begin
+            totMonto:= totMonto + l^.dato.monto;
+            totCompras:= totCompras +1;
+            l:= l^.sig;
+        end;
+        c.dni:= aux;
+        c.montoTot:= totMonto;
+        c.totCompra:= totCompras;
+        agregarA(l,c);
+    end;
+end;
+
+var
+l:lista; v:ventas;
+begin
+l:=nil;
+ventas:= nil;
+cargarListaVentas (v); // se dispone
+procesarEstructura(v,l);
+end. 
