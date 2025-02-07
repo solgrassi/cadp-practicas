@@ -1,0 +1,69 @@
+{
+Realizar un programa que procese la información de los productos de un supermercado. De
+ cada producto se lee código, rubro, stock y monto. La información se lee ordenada por rubro,
+ hasta que llega el producto con código-1. Se pide almacenar, en una estructura de datos
+ adecuada, solamente los productos del rubro “Limpieza”.
+ 
+ 15.50-16.00
+}
+program Hello;
+type
+
+producto = record
+    codigo: integer;
+    rubro: string [20];
+    stock: integer;
+    monto: real;
+end;
+
+lista =^nodo;
+
+nodo = record
+    dato: producto;
+    sig: lista;
+end;
+
+procedure leerP (var p:producto);
+begin
+    write ('codigo');
+    readln (p.codigo);
+    if (p.codigo <> -1) then begin
+        writeln('rubro');
+        readln (p.rubro);
+        writeln ('stock');
+        readln(p.stock);
+        writeln('monto');
+        readln(p.monto);
+    end;
+end;
+
+procedure agregarAdelante (var l:lista; p :producto);
+var
+nue:lista;
+begin
+    new (nue);
+    nue^.dato:= p ;
+    ne^.sig:= l;
+    l:= nue;
+end;
+
+procedure procesarInfo (var l :lista);
+var
+p:producto;
+begin
+    leerP(p);
+    while (p.codigo <> -1) do begin
+        if (p.rubro = 'limpieza') then
+            agregarAdelante(l, p);
+        leerP(p);
+    end;
+end;
+
+var
+l:lista;
+begin
+l:=nil;
+procesarInfo(l);
+end.
+
+
