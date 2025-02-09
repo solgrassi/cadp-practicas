@@ -1,0 +1,78 @@
+{
+
+Una fábrica de automóviles necesita un programa para administrar las piezas de los diferentes 
+modelos de automóviles que fabrica. De cada pieza, se conoce: código de pieza, descripción, 
+cantidad en stock, costo de la pieza, código de modelo al que pertenece (1 a 10), stock mínimo.
+La lectura finaliza al leer el código de pieza 9999 el cual debe procesarse.
+
+A. Leer y almacenar la información de las piezas en una estructura de datos adecuada. 
+La información debe quedar almacenada en el mismo orden en que fue leída.
+
+B. A partir de la estructura generada en A) calcular e informar:
+-Los 2 códigos de modelo de automóviles más baratos de fabricar.
+-El promedio de piezas con código de modelo 3 y cuyo código de pieza comienza en 9.
+-Cuál es el código de pieza en que la fábrica deberá detener su producción ya que su 
+stock actual supere en una unidad a su stock mínimo.
+}
+program Hello;
+type
+
+modelos = 1..10; 
+
+pieza = record
+    codigo: integer;
+    desc: string;
+    stock: integer;
+    costo: real;
+    modelo: modelos;
+    minStock: integer;
+end. 
+
+lista =^nodo;
+
+nodo = record
+    dato: pieza;
+    sig:lista;
+end;
+
+procedure leerPieza (var p:pieza);
+begin
+    writreln('num pieza');
+    readln(p.codigo);
+    writreln('descripcion');
+    readln (p.desc);
+    writreln('stock');
+    readln(p.stock);
+    writreln('costo');
+    readln(p.costo);
+    writreln('modelo (1-10)');
+    readln(p.modelo);
+    writreln('stock minimo');
+    readln(p.minStock);
+end;
+
+procedure agregarAtras (var l,ult:lista; p:pieza );
+var
+nue:lista;
+begin
+    new(nue);
+    nue^.dato:=p;
+    nue^.sig:=nil;
+    if (l = nil) then
+        l:= nue;
+    else
+        ult^.sig:= nue;
+    ult:= nue;
+end;
+
+procedure cargarEstructura (var l:lista);
+var
+p:pieza; ult:lista;
+begin
+    repeat
+        leerPieza(p);
+        agregarAtras(l,ult,p);
+    until p.codigo = 9999;
+end;
+
+
