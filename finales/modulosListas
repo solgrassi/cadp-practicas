@@ -1,0 +1,101 @@
+program listas;
+
+procedure agregarAdelante (var l:lista; e:elemento);
+var
+nue:lista;
+begin
+    new(nue);
+    nue^.dato:= e;
+    nue^.sig:=l;
+    l:=nue;
+end;
+
+procedure agregarAtras (var l,ult:lista; e:elemento);
+var
+nue:lista;
+begin
+    new(nue);
+    nue^.dato:=e;
+    nue^.sig:=nil;
+    if (l=nil) then
+        l:=nue
+    else
+        ult^.sig:= nue;
+    ult:=nue;
+end;
+
+
+procedure insertarOrdenado (var l:lista; e:elemento);
+var
+act,ant,nue:lista;
+begin
+    new(nue);
+    nue^.dato:=e;
+    act:=l;
+    ant:=l;
+    while (act<> nil) and (e> act^.dato) do begin
+        ant:=act;
+        act:= act^.sig;
+    end;
+    
+    if (act = ant) then
+        l:=nue
+    else
+        ant^.sig:=nue;
+    nue^.sig:=act;
+end;
+
+
+procedure eliminarDesordenado (var l:lista; e:elemento);
+var
+act,ant: lista;
+begin
+   act:=l;
+   while (act<> nil) and (act^.dato<> e) do begin
+        ant:=act;
+        act:=act^.sig;
+    end;
+    
+    if (act<>nil) then begin
+        if (act = l) then
+            l:= l^.sig
+        else begin
+            ant^.sig:= act^.sig;
+            dispose (act);
+        end;
+    end;
+end;
+
+        
+
+procedure eliminarDesordenadoRepetido (var l:lista; e:elemento);
+var
+act, ant:lista;
+begin
+    act:=l;
+    while (act<>nil) do begin
+        if (e= act^.dato) then begin
+            if (act =l) then
+                l:=l^.sig
+            else begin
+                ant^.sig:= act^.sig;
+            dispose(act);
+            act:=ant^sig;
+        else
+            ant:=act;
+            act:=act^sig;
+        end;
+    end;
+end;
+
+        
+
+procedure encontrarUltimo (l:lista; var ult:lista);
+begin
+    ult:=l;
+    while (ult^.sig<> nil) do begin
+        ult:=ult^.sig;
+    end;
+end;
+
+ 
