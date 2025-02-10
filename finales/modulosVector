@@ -102,5 +102,23 @@ begin
 end;
 
 
-
+function vectorCapicua (v:vector; dl:integer): boolean;
+var
+i,j:integer; 
+sigo:boolean;
+begin
+    sigo:= true;
+    i:=1;
+    j:=dl;
+    while (i<=j) and (sigo) do begin
+        if (v[i] <> v[j]) then
+            sigo:=false;
+        else begin
+            i:= i +1;
+            j:=j-1;
+        end;
+    end;
+vectorCapicua:= sigo;
+end;
+        
 
