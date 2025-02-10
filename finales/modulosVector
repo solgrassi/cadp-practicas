@@ -1,0 +1,106 @@
+
+program vectores;
+
+procedure insertarAdelante (var v:vector; var dl:integer;df: integer;var pude:boolean;ele:elemento);
+begin
+    pude:=false;
+   if (dl<df) then begin
+        for i:= dl downto 1 do
+            v[i+1]:=v[i];
+        v[1]:= ele;
+        dl:=dl+1;
+        pude:=true;
+    end;
+end;
+
+
+procedure agregarAtras (var v:vector; ele:elemento; var dl:integer;var pude: boolean; df:integer);
+begin
+    pude:=false;
+    if (dl<df) then begin
+        dl:=dl +1;
+        v[dl]:= ele;
+        pude:=true;
+    end;
+end;
+
+pocedure insertarPos (var v:Vector; var dl:integer; pos:integer; var pude: boolean; e:elemento; df:integer);
+var
+i:integer;
+begin
+    pude:=false;
+    if (dl<df) and (pos>= 1) and (pos<= dl) then begin
+        for i:= dl downto pos do
+            v[i+1]:=v[i];
+        v[pos]:=ele;
+        dl:=dl+1;
+        pude:=true;
+    end;
+end;
+
+        
+
+procedure eliminarVector (var v:vector; var dl: integer; pos: integer;var pude:boolean);
+var
+i:integer;
+begin
+    pude:=false;
+    if (pos>= 1) and (pos<= dl) then begin
+        for i:= pos to dl-1 do
+           v[i]:= v[i+1];
+          pude:=true;
+          dl:= dl-1;
+    end;
+end;
+
+function busquedaDesordenada (v:vector; dl:integer; e:elemento): boolean;
+var
+aux:= boolean; i:= integer;
+begin
+    aux:=false; i:= 1;
+    while (i<=dl) and (not aux) begin
+        if (v[i].ele = e) then
+            aux:=true;
+        else
+            i:= i+1;
+    end;
+    busquedaDesordenada:=aux;
+end;
+
+
+function busquedaOrdenada (v:vector; dl:integer; e:elemento): boolean;
+var
+pos:integer;
+begin
+    pos:=1;
+    while (pos<= dl) and (ele> v[pos]) then
+        pos:= pos+1;
+    if (pos<= dl) and (ele = v[pos]) then
+        busquedaOrdenada:=true;
+    else
+        busquedaOrdenada:=false;
+end;
+
+function busquedaDicotomica (v:vector; dl:integer; e:elemento):boolean;
+var
+pri,ult,medio:integer;
+begin
+    pri:=1;
+    ult:=dl;
+    medio:= (pri+ult)/dl;
+    while (pri<=ult) and (v[medio] <> e) do begin
+        if (e< v[medio]) then
+            ult:= medio-1;
+        else
+            pri:= medio+1;
+        medoi:= (pri+ult)/2;
+    end;
+    if (pri<= ult) and (v[medio] = e) then
+        busquedaDicotomica:=true;
+    else
+        busquedaDicotomica:= false;
+end;
+
+
+
+
